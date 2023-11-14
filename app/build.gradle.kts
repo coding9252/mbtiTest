@@ -5,12 +5,11 @@ plugins {
 
 android {
     namespace = "com.leegahyeon.mbtitest"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.leegahyeon.mbtitest"
         minSdk = 26
-        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
