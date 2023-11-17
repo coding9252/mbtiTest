@@ -4,6 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 class QuestionFragment : Fragment() {
@@ -57,6 +62,66 @@ class QuestionFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
+        val view = inflater.inflate(R.layout.fragment_question, container, false)
+
+        val title: TextView = view. findViewById(R.id.tv_question_title)
+        title.text = getString(questionTitle[questionType])
+
+        val questionTextView = listOf<TextView>(
+            view.findViewById(R.id.tv_question1),
+            view.findViewById(R.id.tv_question2),
+            view.findViewById(R.id.tv_question3)
+        )
+
+        val answerRadioGroup = listOf<RadioGroup>(
+            view.findViewById(R.id.rg_answer_1),
+            view.findViewById(R.id.rg_answer_2),
+            view.findViewById(R.id.rg_answer_3)
+        )
+
+
+        for (i in questionTextView.indices){
+            questionTextView[i].text = getString(questionTexts[questionType][i])
+
+            val radioButton1 = answerRadioGroup[i].getChildAt(0) as RadioButton
+            val radioButton2 = answerRadioGroup[i].getChildAt(1) as RadioButton
+
+            radioButton1.text = getString(questionAnswers[questionType][i][0])
+            radioButton2.text = getString(questionAnswers[questionType][i][1])
+        }
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val answerRadioGroup = listOf<RadioGroup>(
+            view.findViewById(R.id.rg_answer_1),
+            view.findViewById(R.id.rg_answer_2),
+            view.findViewById(R.id.rg_answer_3)
+        )
+
+        val btn_next : Button = view.findViewById(R.id.btn_next)
+
+
+        btn_next.setOnClickListener {
+
+            val isAllAnswered = answerRadioGroup.all { it.checkedRadioButtonId != -1 }
+
+            if(isAllAnswered){
+                val response = answerRadioGroup.map {radioGroup ->   // << 2,1,2
+                    val firstRadioButton = radioGroup.getChildAt(0) as RadioButton
+                    if (firstRadioButton.isChecked) 1 else 2
+                }
+
+                (activity as? TestActivity)?.questionnaireResults?.addResponses(response)
+                (activity as? TestActivity)?.moveToNextQuestion()
+
+            }else{
+                Toast.makeText(context, "모든 질문에 답해 주세요.", Toast.LENGTH_SHORT).show()
+            }
+
+        }
 
     }
 

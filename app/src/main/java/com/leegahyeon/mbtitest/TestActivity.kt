@@ -10,6 +10,8 @@ class TestActivity : AppCompatActivity() {
 
     private lateinit var viewPager: ViewPager2
 
+    val  questionnaireResults = QuestionnaireResults()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
@@ -35,7 +37,7 @@ class TestActivity : AppCompatActivity() {
 class QuestionnaireResults {
     val results = mutableListOf<Int>()
 
-    fun addResponses(response: List<Int>) {  //1,1,2
+    fun addResponses(response: List<Int>) {  //2,1,2
         val mostFrequent = response.groupingBy { it }.eachCount().maxByOrNull { it.value }?.key
         mostFrequent?.let { results.add(it) }
     }
